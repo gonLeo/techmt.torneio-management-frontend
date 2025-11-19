@@ -3,6 +3,7 @@ import './styles/App.css';
 import PreTournament from './components/PreTournament';
 import TournamentActive from './components/TournamentActive';
 import TournamentFinished from './components/TournamentFinished';
+import API_BASE_URL from './config';
 
 function App() {
   const [tournamentStatus, setTournamentStatus] = useState('pre-tournament');
@@ -16,7 +17,7 @@ function App() {
 
   const fetchPlayers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/players');
+      const response = await fetch(`${API_BASE_URL}/api/players`);
       const data = await response.json();
       setPlayers(data);
     } catch (error) {
@@ -26,7 +27,7 @@ function App() {
 
   const fetchTournamentStatus = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/status');
+      const response = await fetch(`${API_BASE_URL}/api/tournament/status`);
       const data = await response.json();
       setTournament(data);
       setTournamentStatus(data.status);

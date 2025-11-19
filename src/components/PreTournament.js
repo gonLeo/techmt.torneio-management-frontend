@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API_BASE_URL from '../config';
 
 function PreTournament({ players, tournament, onRefresh }) {
   const [accordionOpen, setAccordionOpen] = useState({});
@@ -14,7 +15,7 @@ function PreTournament({ players, tournament, onRefresh }) {
 
   const togglePlayerConfirmation = async (playerId) => {
     try {
-      await fetch(`http://localhost:5000/api/players/${playerId}/toggle`, {
+      await fetch(`${API_BASE_URL}/api/players/${playerId}/toggle`, {
         method: 'POST'
       });
       onRefresh();
@@ -25,7 +26,7 @@ function PreTournament({ players, tournament, onRefresh }) {
 
   const handleStartTournament = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/start', {
+      const response = await fetch(`${API_BASE_URL}/api/tournament/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

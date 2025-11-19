@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from '../config';
 
 function TournamentActive({ players, tournament, onRefresh }) {
   const [currentPhase, setCurrentPhase] = useState(null);
@@ -20,7 +21,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
 
   const fetchCurrentPhase = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/current-phase');
+      const response = await fetch(`${API_BASE_URL}/api/tournament/current-phase`);
       const data = await response.json();
       setCurrentPhase(data);
     } catch (error) {
@@ -30,7 +31,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
 
   const fetchAllPhases = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/phases');
+      const response = await fetch(`${API_BASE_URL}/api/tournament/phases`);
       const data = await response.json();
       setAllPhases(data);
     } catch (error) {
@@ -40,7 +41,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
 
   const fetchNextMatches = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/next-matches');
+      const response = await fetch(`${API_BASE_URL}/api/tournament/next-matches`);
       const data = await response.json();
       setNextMatches(data);
     } catch (error) {
@@ -50,7 +51,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
 
   const fetchRankings = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/rankings');
+      const response = await fetch(`${API_BASE_URL}/api/tournament/rankings`);
       const data = await response.json();
       setRankings(data);
     } catch (error) {
@@ -77,7 +78,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/register-score', {
+      const response = await fetch(`${API_BASE_URL}/api/tournament/register-score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -122,7 +123,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
 
   const setPenaltyWinner = async (matchId, winnerId) => {
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/set-winner', {
+      const response = await fetch(`${API_BASE_URL}/api/tournament/set-winner`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ matchId, winnerId })
@@ -158,7 +159,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/advance-phase', {
+      const response = await fetch(`${API_BASE_URL}/api/tournament/advance-phase`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });

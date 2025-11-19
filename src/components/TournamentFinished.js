@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API_BASE_URL from '../config';
 
 function TournamentFinished({ tournament, players, onRefresh }) {
   const [showResetModal, setShowResetModal] = useState(false);
@@ -112,7 +113,7 @@ function TournamentFinished({ tournament, players, onRefresh }) {
 
   const handleResetTournament = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tournament/reset', {
+      const response = await fetch(`${API_BASE_URL}/api/tournament/reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ authCode })
