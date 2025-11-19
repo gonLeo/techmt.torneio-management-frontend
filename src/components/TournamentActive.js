@@ -81,8 +81,8 @@ function TournamentActive({ players, tournament, onRefresh }) {
       const data = await response.json();
       
       if (response.ok) {
-        // Check if this was volta and if there's a tie in aggregate
-        if (leg === 'volta' && !match.isFinal) {
+        // Check if this was volta and if there's a tie in aggregate (only for regular phases with ida/volta)
+        if (leg === 'volta' && !match.isFinal && !match.isPreliminary) {
           const aggregateP1 = (match.goalsP1Ida || 0) + parseInt(scoreForm.goalsP1);
           const aggregateP2 = (match.goalsP2Ida || 0) + parseInt(scoreForm.goalsP2);
           
@@ -172,16 +172,34 @@ function TournamentActive({ players, tournament, onRefresh }) {
     return <div className="tournament-active"><p>Carregando...</p></div>;
   }
 
-  const phaseName = currentPhase.isFinal ? 'FINAL' : `Fase ${currentPhase.phaseNumber}`;
+  // Determinar nome da fase
+  let phaseName;
+  if (currentPhase.isPreliminary) {
+    phaseName = 'Rodada 0 – Pré-Rodada';
+  } else if (currentPhase.isFinal) {
+    phaseName = 'FINAL';
+  } else {
+    phaseName = `Fase ${currentPhase.phaseNumber}`;
+  }
 
   return (
     <div className="tournament-active">
       <h2>🔥 Torneio em Andamento - {phaseName}</h2>
 
-      {/* Bye Player Info */}
-      {currentPhase.byePlayer && (
-        <div className="bye-player-info">
-          ⚡ <strong>{currentPhase.byePlayer.name}</strong> avança automaticamente para a próxima fase (Bye)
+      {/* Bye Players da Pré-Rodada */}
+      {currentPhase.isPreliminary && currentPhase.byePlayers && currentPhase.byePlayers.length > 0 && (
+        <div className="prelim-bye-info">
+          <h4>⚡ Jogadores classificados direto (Bye da Pré-Rodada):</h4>
+          <div className="prelim-bye-players">
+            {currentPhase.byePlayers.map(player => (
+              <div key={player.id} className="prelim-bye-player">
+                {player.name}
+              </div>
+            ))}
+          </div>
+          <p className="prelim-explanation">
+            Estes jogadores avançam automaticamente para a próxima fase após os confrontos de qualificação.
+          </p>
         </div>
       )}
 
@@ -192,20 +210,31 @@ function TournamentActive({ players, tournament, onRefresh }) {
           <p>Nenhum jogo pendente. Todos os confrontos da fase atual foram concluídos!</p>
         ) : (
           <div className="matches-list">
-            {nextMatches.map(match => (
-              <div key={match.id} className="match-card next">
-                <div className="match-header">
-                  <strong>{match.player1?.name || 'Jogador 1'} vs {match.player2?.name || 'Jogador 2'}</strong>
-                  <span className="match-leg">{match.nextLeg === 'ida' ? 'Jogo de Ida' : 'Jogo de Volta'}</span>
+            {nextMatches.map(match => {
+              let legLabel = 'Jogo de Ida';
+              if (match.isPreliminary) {
+                legLabel = 'Pré-Rodada';
+              } else if (match.isFinal) {
+                legLabel = 'Final';
+              } else if (match.nextLeg === 'volta') {
+                legLabel = 'Jogo de Volta';
+              }
+              
+              return (
+                <div key={match.id} className="match-card next">
+                  <div className="match-header">
+                    <strong>{match.player1?.name || 'Jogador 1'} vs {match.player2?.name || 'Jogador 2'}</strong>
+                    <span className="match-leg">{legLabel}</span>
+                  </div>
+                  <button 
+                    className="btn-register-score"
+                    onClick={() => openScoreModal(match, match.isPreliminary || match.isFinal ? 'final' : match.nextLeg)}
+                  >
+                    Registrar Placar
+                  </button>
                 </div>
-                <button 
-                  className="btn-register-score"
-                  onClick={() => openScoreModal(match, match.nextLeg)}
-                >
-                  Registrar Placar
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>
@@ -230,7 +259,21 @@ function TournamentActive({ players, tournament, onRefresh }) {
                   </span>
                 </div>
 
-                {!match.isFinal && (
+                {/* Pré-rodada e Final são jogo único */}
+                {(match.isPreliminary || match.isFinal) && (
+                  <div className="match-score">
+                    <span className="leg-label">Placar:</span>
+                    <span className={match.idaCompleted ? 'completed-score' : 'pending'}>
+                      {match.idaCompleted 
+                        ? `${match.goalsP1Ida} x ${match.goalsP2Ida}` 
+                        : 'Pendente'
+                      }
+                    </span>
+                  </div>
+                )}
+
+                {/* Fases normais têm ida e volta */}
+                {!match.isPreliminary && !match.isFinal && (
                   <>
                     <div className="match-score">
                       <span className="leg-label">Ida:</span>
@@ -253,19 +296,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
                   </>
                 )}
 
-                {match.isFinal && (
-                  <div className="match-score">
-                    <span className="leg-label">Placar:</span>
-                    <span className={match.idaCompleted ? 'completed-score' : 'pending'}>
-                      {match.idaCompleted 
-                        ? `${match.goalsP1Ida} x ${match.goalsP2Ida}` 
-                        : 'Pendente'
-                      }
-                    </span>
-                  </div>
-                )}
-
-                {match.completed && !match.isFinal && (
+                {match.completed && !match.isFinal && !match.isPreliminary && (
                   <div className="match-aggregate">
                     <strong>Agregado: {aggregateP1} x {aggregateP2}</strong>
                     {match.decidedByPenalties && <span className="penalty-badge">🎯 Decidido nos pênaltis</span>}
@@ -286,23 +317,25 @@ function TournamentActive({ players, tournament, onRefresh }) {
       {/* Resumo e Botão de Avançar Fase */}
       {currentPhase && currentPhase.readyToAdvance && !currentPhase.isFinal && (
         <section className="phase-summary">
-          <h3>✅ Fase {currentPhase.phaseNumber} Concluída!</h3>
+          <h3>✅ {currentPhase.isPreliminary ? 'Pré-Rodada' : `Fase ${currentPhase.phaseNumber}`} Concluída!</h3>
           <div className="summary-content">
             <p><strong>Classificados para a próxima fase:</strong></p>
             <div className="qualified-players">
+              {/* Vencedores dos confrontos */}
               {currentPhase.matches.map(match => match.winner && (
                 <div key={match.winner.id} className="qualified-player">
                   🏆 {match.winner.name}
                 </div>
               ))}
-              {currentPhase.byePlayer && (
-                <div className="qualified-player bye">
-                  ⚡ {currentPhase.byePlayer.name} (Bye)
+              {/* Jogadores com bye da pré-rodada */}
+              {currentPhase.isPreliminary && currentPhase.byePlayers && currentPhase.byePlayers.map(player => (
+                <div key={player.id} className="qualified-player bye">
+                  ⚡ {player.name} (Bye da Pré)
                 </div>
-              )}
+              ))}
             </div>
             <button className="btn-advance-phase" onClick={advancePhase}>
-              🚀 Iniciar Próxima Fase
+              🚀 {currentPhase.isPreliminary ? 'Iniciar Fase 1' : 'Iniciar Próxima Fase'}
             </button>
           </div>
         </section>
@@ -318,7 +351,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
               return null;
             }
 
-            const phaseTitle = phase.isFinal ? 'FINAL' : `Fase ${phase.phaseNumber}`;
+            const phaseTitle = phase.isPreliminary ? 'Rodada 0 – Pré-Rodada' : (phase.isFinal ? 'FINAL' : `Fase ${phase.phaseNumber}`);
 
             return (
               <div key={phaseIndex} className="history-phase">
@@ -340,7 +373,16 @@ function TournamentActive({ players, tournament, onRefresh }) {
                           </span>
                         </div>
 
-                        {!match.isFinal && (
+                        {/* Pré-rodada e Final são jogo único */}
+                        {(match.isPreliminary || match.isFinal) && (
+                          <div className="match-score">
+                            <span className="leg-label">Placar:</span>
+                            <span>{match.goalsP1Ida} x {match.goalsP2Ida}</span>
+                          </div>
+                        )}
+
+                        {/* Fases normais têm ida/volta/agregado */}
+                        {!match.isPreliminary && !match.isFinal && (
                           <>
                             <div className="match-score">
                               <span className="leg-label">Ida:</span>
@@ -370,9 +412,10 @@ function TournamentActive({ players, tournament, onRefresh }) {
                       </div>
                     );
                   })}
-                  {phase.byePlayer && (
+                  {/* Jogadores com bye da pré-rodada */}
+                  {phase.isPreliminary && phase.byePlayers && phase.byePlayers.length > 0 && (
                     <div className="history-bye">
-                      ⚡ {phase.byePlayer.name} avançou automaticamente (Bye)
+                      ⚡ Classificados direto (Bye da Pré): {phase.byePlayers.map(p => p.name).join(', ')}
                     </div>
                   )}
                 </div>
@@ -421,7 +464,14 @@ function TournamentActive({ players, tournament, onRefresh }) {
       {selectedMatch && (
         <div className="modal-overlay" onClick={() => setSelectedMatch(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Registrar Placar - {selectedMatch.leg === 'ida' ? 'Ida' : selectedMatch.leg === 'volta' ? 'Volta' : 'Final'}</h3>
+            <h3>
+              Registrar Placar - {
+                selectedMatch.match.isPreliminary ? 'Pré-Rodada' :
+                selectedMatch.leg === 'ida' ? 'Ida' : 
+                selectedMatch.leg === 'volta' ? 'Volta' : 
+                'Final'
+              }
+            </h3>
             <p><strong>{selectedMatch.match.player1?.name || 'Jogador 1'} vs {selectedMatch.match.player2?.name || 'Jogador 2'}</strong></p>
             
             <div className="score-inputs">

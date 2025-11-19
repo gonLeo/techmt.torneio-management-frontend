@@ -417,6 +417,44 @@ body {
   box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
 }
 
+/* Prelim Bye Info */
+.prelim-bye-info {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.prelim-bye-info h4 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.prelim-bye-players {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.prelim-bye-player {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.prelim-explanation {
+  font-size: 0.95rem;
+  font-style: italic;
+  opacity: 0.9;
+  margin-top: 10px;
+}
+
 .next-matches {
   margin-bottom: 40px;
 }

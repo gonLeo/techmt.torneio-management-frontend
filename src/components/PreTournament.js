@@ -64,9 +64,36 @@ function PreTournament({ players, tournament, onRefresh }) {
                 <ul>
                   <li>Formato: eliminatória direta (mata-mata)</li>
                   <li>Jogos de ida e volta em todas as fases, exceto final (jogo único)</li>
+                  <li>Pré-rodada (se necessário) também é jogo único</li>
                   <li>Tempo de partida: 6 minutos por tempo</li>
                   <li>Seleção de times livre (ambos podem escolher o mesmo time)</li>
                   <li>Confronto pode ser presencial ou online</li>
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <div className="accordion-item">
+            <button 
+              className="accordion-header" 
+              onClick={() => toggleAccordion('preliminary')}
+            >
+              Sistema de Pré-Rodada (Qualificação) {accordionOpen.preliminary ? '▼' : '▶'}
+            </button>
+            {accordionOpen.preliminary && (
+              <div className="accordion-content">
+                <p><strong>O torneio usa o sistema tradicional de pré-rodada:</strong></p>
+                <ul>
+                  <li>Se o número de inscritos não for potência de 2 (4, 8, 16...), haverá uma Rodada 0</li>
+                  <li>Alguns jogadores são sorteados para disputar confrontos de qualificação (jogo único)</li>
+                  <li>Os demais avançam direto para a Fase 1 (bye da pré-rodada)</li>
+                  <li>Após a pré-rodada, o torneio segue sempre com número par de jogadores</li>
+                </ul>
+                <p><strong>Exemplos:</strong></p>
+                <ul>
+                  <li>5 jogadores → 1 confronto de pré → 4 na Fase 1 (semifinais)</li>
+                  <li>10 jogadores → 2 confrontos de pré → 8 na Fase 1 (quartas)</li>
+                  <li>11 jogadores → 3 confrontos de pré → 8 na Fase 1 (quartas)</li>
                 </ul>
               </div>
             )}
