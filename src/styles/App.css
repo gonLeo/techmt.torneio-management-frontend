@@ -1000,6 +1000,45 @@ body {
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
+/* Reset Section */
+.reset-section {
+  margin: 30px 0;
+  text-align: center;
+}
+
+.btn-reset {
+  padding: 14px 35px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-reset:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+  background: linear-gradient(135deg, #f5576c, #f093fb);
+}
+
+.btn-reset:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+}
+
+.warning-text {
+  background: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 10px 0;
+  border: 1px solid #ffc107;
+}
+
 .congratulations {
   text-align: center;
   padding: 40px 20px;

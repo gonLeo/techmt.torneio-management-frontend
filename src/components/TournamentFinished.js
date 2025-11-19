@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function TournamentFinished({ tournament, players, onRefresh }) {
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [authCode, setAuthCode] = useState('');
+  const [message, setMessage] = useState('');
+  
   const confirmedPlayers = players.filter(p => p.confirmed);
   const sortedByGoals = [...confirmedPlayers].sort((a, b) => b.goals - a.goals);
   const sortedByWins = [...confirmedPlayers].sort((a, b) => b.wins - a.wins);
@@ -106,6 +110,30 @@ function TournamentFinished({ tournament, players, onRefresh }) {
     });
   };
 
+  const handleResetTournament = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/tournament/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ authCode })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setMessage(`✅ ${data.message}`);
+        setTimeout(() => {
+          setShowResetModal(false);
+          onRefresh();
+        }, 1000);
+      } else {
+        setMessage(`❌ ${data.error}`);
+      }
+    } catch (error) {
+      setMessage('❌ Erro ao resetar torneio');
+    }
+  };
+
   return (
     <div className="tournament-finished">
       <h2>🏆 Torneio Finalizado! 🏆</h2>
@@ -203,7 +231,7 @@ function TournamentFinished({ tournament, players, onRefresh }) {
       {/* Botão Compartilhar */}
       <section className="share-section">
         <button className="btn-share" onClick={generateStoryImage}>
-          📸 Gerar Story para Instagram
+          📸 Compartilhar
         </button>
       </section>
 
@@ -215,6 +243,42 @@ function TournamentFinished({ tournament, players, onRefresh }) {
           Obrigado por tornar este torneio épico!
         </p>
       </section>
+
+      {/* Botão Iniciar Novo Torneio */}
+      <section className="reset-section">
+        <button className="btn-reset" onClick={() => setShowResetModal(true)}>
+          🔄 Iniciar Novo Torneio
+        </button>
+      </section>
+
+      {/* Modal de Confirmação de Reset */}
+      {showResetModal && (
+        <div className="modal-overlay" onClick={() => setShowResetModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>⚠️ Resetar Torneio</h3>
+            <p>Digite o código de autorização para iniciar um novo torneio:</p>
+            <p className="warning-text">
+              <strong>Atenção:</strong> Todos os dados do torneio atual serão perdidos!
+            </p>
+            
+            <div className="form-group">
+              <input 
+                type="password" 
+                value={authCode}
+                onChange={(e) => setAuthCode(e.target.value)}
+                placeholder="Digite o código"
+                autoFocus
+              />
+            </div>
+            
+            <div className="modal-actions">
+              <button onClick={handleResetTournament} className="btn-confirm">Confirmar Reset</button>
+              <button onClick={() => setShowResetModal(false)} className="btn-cancel">Cancelar</button>
+            </div>
+            {message && <p className="message">{message}</p>}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
