@@ -28,31 +28,13 @@ function TournamentFinished({ tournament, players, onRefresh }) {
         <div className="champion-card gold">
           <h3>🥇 CAMPEÃO</h3>
           <p className="name">{tournament.champion?.name}</p>
-          <p className="prize">
-            R$ {championFinalPrize.toFixed(2)} (prêmio final)
-          </p>
-          {championPhaseBonus > 0 && (
-            <p className="bonus">+ R$ {championPhaseBonus.toFixed(2)} (bônus de fases)</p>
-          )}
-          <p className="total-prize">
-            <strong>Total: R$ {championPlayer?.earnings.toFixed(2)}</strong>
-          </p>
-          <p className="beer">+ 1 Cerveja Louvada 🍺</p>
+          <p className="prize">R$ {championPlayer?.earnings.toFixed(2)} + 1 Cerveja Louvada</p>
         </div>
 
         <div className="champion-card silver">
           <h3>🥈 VICE-CAMPEÃO</h3>
           <p className="name">{tournament.runnerUp?.name}</p>
-          <p className="prize">
-            R$ {runnerUpFinalPrize.toFixed(2)} (prêmio final)
-          </p>
-          {runnerUpPhaseBonus > 0 && (
-            <p className="bonus">+ R$ {runnerUpPhaseBonus.toFixed(2)} (bônus de fases)</p>
-          )}
-          <p className="total-prize">
-            <strong>Total: R$ {runnerUpPlayer?.earnings.toFixed(2)}</strong>
-          </p>
-          <p className="beer">+ 1 Cerveja Louvada 🍺</p>
+          <p className="prize">R$ {runnerUpPlayer?.earnings.toFixed(2)} + 1 Cerveja Louvada</p>
         </div>
       </section>
 
