@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 function PreTournament({ players, tournament, onRefresh }) {
   const [accordionOpen, setAccordionOpen] = useState({});
   const [authCode, setAuthCode] = useState('');
+  const [entryFee, setEntryFee] = useState(10);
+  const [phaseBonus, setPhaseBonus] = useState(2);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -26,7 +28,11 @@ function PreTournament({ players, tournament, onRefresh }) {
       const response = await fetch('http://localhost:5000/api/tournament/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ authCode })
+        body: JSON.stringify({ 
+          authCode,
+          entryFee: parseFloat(entryFee),
+          phaseBonus: parseFloat(phaseBonus)
+        })
       });
       
       const data = await response.json();
@@ -135,10 +141,10 @@ function PreTournament({ players, tournament, onRefresh }) {
             {accordionOpen.prizes && (
               <div className="accordion-content">
                 <ul>
-                  <li><strong>Taxa de inscrição:</strong> R$ 10 por jogador</li>
+                  <li><strong>Taxa de inscrição:</strong> Valor acordado entre a gente</li>
                   <li><strong>Campeão:</strong> 70% do total + 1 cerveja Louvada</li>
                   <li><strong>Vice:</strong> 30% do total + 1 cerveja Louvada</li>
-                  <li><strong>Bônus:</strong> R$ 2 por confronto vencido</li>
+                  <li><strong>Bônus:</strong> Valor acordado por confronto vencido</li>
                   <li><strong>Artilheiro do torneio:</strong> 1 cerveja Louvada</li>
                 </ul>
               </div>
@@ -231,15 +237,44 @@ function PreTournament({ players, tournament, onRefresh }) {
       {showAuthModal && (
         <div className="modal-overlay" onClick={() => setShowAuthModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Código de Autorização</h3>
-            <p>Digite o código para iniciar o torneio:</p>
-            <input 
-              type="password" 
-              value={authCode}
-              onChange={(e) => setAuthCode(e.target.value)}
-              placeholder="Digite o código"
-              autoFocus
-            />
+            <h3>Configurar Torneio</h3>
+            <p>Digite o código e configure os valores:</p>
+            
+            <div className="form-group">
+              <label>Código de Autorização:</label>
+              <input 
+                type="password" 
+                value={authCode}
+                onChange={(e) => setAuthCode(e.target.value)}
+                placeholder="Digite o código"
+                autoFocus
+              />
+            </div>
+            
+            <div className="form-group">
+              <label>Valor da Inscrição (R$):</label>
+              <input 
+                type="number" 
+                step="0.01"
+                min="0"
+                value={entryFee}
+                onChange={(e) => setEntryFee(e.target.value)}
+                placeholder="Ex: 10.00"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label>Bônus por Fase Vencida (R$):</label>
+              <input 
+                type="number" 
+                step="0.01"
+                min="0"
+                value={phaseBonus}
+                onChange={(e) => setPhaseBonus(e.target.value)}
+                placeholder="Ex: 2.00"
+              />
+            </div>
+            
             <div className="modal-actions">
               <button onClick={handleStartTournament} className="btn-confirm">Confirmar</button>
               <button onClick={() => setShowAuthModal(false)} className="btn-cancel">Cancelar</button>

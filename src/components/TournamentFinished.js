@@ -6,6 +6,19 @@ function TournamentFinished({ tournament, players, onRefresh }) {
   const sortedByWins = [...confirmedPlayers].sort((a, b) => b.wins - a.wins);
   const sortedByEarnings = [...confirmedPlayers].sort((a, b) => b.earnings - a.earnings);
 
+  // Calcular bônus de fase e prêmio final
+  const totalArrecadado = confirmedPlayers.length * tournament.entryFee;
+  const totalBonusPagos = confirmedPlayers.reduce((sum, p) => sum + p.earnings, 0);
+  const totalParaDividir = totalArrecadado - totalBonusPagos;
+  const championFinalPrize = totalParaDividir * 0.7;
+  const runnerUpFinalPrize = totalParaDividir * 0.3;
+  
+  // Encontrar bônus de fase do campeão e vice
+  const championPlayer = players.find(p => p.id === tournament.champion?.id);
+  const runnerUpPlayer = players.find(p => p.id === tournament.runnerUp?.id);
+  const championPhaseBonus = championPlayer ? championPlayer.earnings - championFinalPrize : 0;
+  const runnerUpPhaseBonus = runnerUpPlayer ? runnerUpPlayer.earnings - runnerUpFinalPrize : 0;
+
   return (
     <div className="tournament-finished">
       <h2>🏆 Torneio Finalizado! 🏆</h2>
@@ -15,13 +28,31 @@ function TournamentFinished({ tournament, players, onRefresh }) {
         <div className="champion-card gold">
           <h3>🥇 CAMPEÃO</h3>
           <p className="name">{tournament.champion?.name}</p>
-          <p className="prize">R$ {(tournament.totalPrize * 0.7).toFixed(2)} + 1 Cerveja Louvada</p>
+          <p className="prize">
+            R$ {championFinalPrize.toFixed(2)} (prêmio final)
+          </p>
+          {championPhaseBonus > 0 && (
+            <p className="bonus">+ R$ {championPhaseBonus.toFixed(2)} (bônus de fases)</p>
+          )}
+          <p className="total-prize">
+            <strong>Total: R$ {championPlayer?.earnings.toFixed(2)}</strong>
+          </p>
+          <p className="beer">+ 1 Cerveja Louvada 🍺</p>
         </div>
 
         <div className="champion-card silver">
           <h3>🥈 VICE-CAMPEÃO</h3>
           <p className="name">{tournament.runnerUp?.name}</p>
-          <p className="prize">R$ {(tournament.totalPrize * 0.3).toFixed(2)} + 1 Cerveja Louvada</p>
+          <p className="prize">
+            R$ {runnerUpFinalPrize.toFixed(2)} (prêmio final)
+          </p>
+          {runnerUpPhaseBonus > 0 && (
+            <p className="bonus">+ R$ {runnerUpPhaseBonus.toFixed(2)} (bônus de fases)</p>
+          )}
+          <p className="total-prize">
+            <strong>Total: R$ {runnerUpPlayer?.earnings.toFixed(2)}</strong>
+          </p>
+          <p className="beer">+ 1 Cerveja Louvada 🍺</p>
         </div>
       </section>
 
