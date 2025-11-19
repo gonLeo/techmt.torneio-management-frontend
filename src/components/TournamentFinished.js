@@ -11,13 +11,6 @@ function TournamentFinished({ tournament, players, onRefresh }) {
   const sortedByWins = [...confirmedPlayers].sort((a, b) => b.wins - a.wins);
   const sortedByEarnings = [...confirmedPlayers].sort((a, b) => b.earnings - a.earnings);
 
-  // Calcular bônus de fase e prêmio final
-  const totalArrecadado = confirmedPlayers.length * tournament.entryFee;
-  const totalBonusPagos = confirmedPlayers.reduce((sum, p) => sum + p.earnings, 0);
-  const totalParaDividir = totalArrecadado - totalBonusPagos;
-  const championFinalPrize = totalParaDividir * 0.7;
-  const runnerUpFinalPrize = totalParaDividir * 0.3;
-  
   // Encontrar jogadores
   const championPlayer = players.find(p => p.id === tournament.champion?.id);
   const runnerUpPlayer = players.find(p => p.id === tournament.runnerUp?.id);
