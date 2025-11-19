@@ -9,6 +9,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
   const [scoreForm, setScoreForm] = useState({ goalsP1: '', goalsP2: '' });
   const [message, setMessage] = useState('');
   const [penaltyMatch, setPenaltyMatch] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchCurrentPhase();
@@ -66,6 +67,15 @@ function TournamentActive({ players, tournament, onRefresh }) {
   };
 
   const registerScore = async (match, leg) => {
+    if (isSubmitting) return;
+    
+    // Fecha o modal imediatamente
+    setSelectedMatch(null);
+    setScoreForm({ goalsP1: '', goalsP2: '' });
+    
+    // Ativa o loading
+    setIsSubmitting(true);
+    
     try {
       const response = await fetch('http://localhost:5000/api/tournament/register-score', {
         method: 'POST',
@@ -89,24 +99,24 @@ function TournamentActive({ players, tournament, onRefresh }) {
           if (aggregateP1 === aggregateP2) {
             // Show penalty decision UI
             setPenaltyMatch(match);
-            setSelectedMatch(null);
-            setScoreForm({ goalsP1: '', goalsP2: '' });
+            setIsSubmitting(false);
             return;
           }
         }
 
         setMessage(`✅ Placar registrado!`);
-        setSelectedMatch(null);
-        setScoreForm({ goalsP1: '', goalsP2: '' });
         setTimeout(() => {
           setMessage('');
+          setIsSubmitting(false);
           refreshAll();
         }, 1500);
       } else {
         setMessage(`❌ ${data.error}`);
+        setIsSubmitting(false);
       }
     } catch (error) {
       setMessage('❌ Erro ao registrar placar');
+      setIsSubmitting(false);
     }
   };
 
@@ -139,6 +149,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
     setSelectedMatch({ match, leg });
     setScoreForm({ goalsP1: '', goalsP2: '' });
     setMessage('');
+    setIsSubmitting(false);
   };
 
   const advancePhase = async () => {
@@ -509,6 +520,16 @@ function TournamentActive({ players, tournament, onRefresh }) {
               <button onClick={() => setSelectedMatch(null)} className="btn-cancel">Cancelar</button>
             </div>
             {message && <p className="message">{message}</p>}
+          </div>
+        </div>
+      )}
+
+      {/* Loading Overlay em Tela Cheia */}
+      {isSubmitting && (
+        <div className="loading-overlay">
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+            <p>Registrando placar...</p>
           </div>
         </div>
       )}
