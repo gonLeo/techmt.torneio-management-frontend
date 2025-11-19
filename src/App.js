@@ -43,7 +43,7 @@ function App() {
   return (
     <div className="App">
       <header className="app-header">
-        <h1>🏆 Torneio Híbrido EA FC 24 🏆</h1>
+        <h1>🏆 Torneio dos Padrin 🏆</h1>
         <p className="subtitle">Presencial e online, com prêmio em dinheiro e cerveja para aumentar a competitividade</p>
       </header>
 

@@ -35,7 +35,7 @@ function TournamentFinished({ tournament, players, onRefresh }) {
     storyContent.style.height = '1920px';
     storyContent.style.position = 'fixed';
     storyContent.style.left = '-9999px';
-    storyContent.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    storyContent.style.background = 'linear-gradient(135deg, #1a5f1a 0%, #0d3f0d 100%)';
     storyContent.style.padding = '60px 40px';
     storyContent.style.fontFamily = 'Arial, sans-serif';
     storyContent.style.color = 'white';
@@ -43,7 +43,7 @@ function TournamentFinished({ tournament, players, onRefresh }) {
 
     storyContent.innerHTML = `
       <div style="text-align: center; margin-bottom: 50px;">
-        <h1 style="font-size: 72px; margin: 0 0 20px 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.3);">🏆 EA FC 24 🏆</h1>
+        <h1 style="font-size: 72px; margin: 0 0 20px 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.3);">🏆 TORNEIO DOS PADRIN 🏆</h1>
         <h2 style="font-size: 48px; margin: 0; font-weight: normal; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">TORNEIO FINALIZADO</h2>
       </div>
 
@@ -63,14 +63,14 @@ function TournamentFinished({ tournament, players, onRefresh }) {
 
       ${tournament.topScorer ? `
       <div style="background: rgba(255,255,255,0.95); padding: 35px; border-radius: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-        <h3 style="font-size: 48px; margin: 0 0 15px 0; color: #667eea;">⚽ ARTILHEIRO</h3>
+        <h3 style="font-size: 48px; margin: 0 0 15px 0; color: #1a5f1a;">⚽ ARTILHEIRO</h3>
         <p style="font-size: 56px; margin: 10px 0; font-weight: bold; color: #333;">${tournament.topScorer.name}</p>
         <p style="font-size: 52px; margin: 0; color: #555;">${tournament.topScorer.goals} gols</p>
       </div>
       ` : ''}
 
       <div style="background: rgba(255,255,255,0.9); padding: 35px; border-radius: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-        <h3 style="font-size: 48px; margin: 0 0 25px 0; color: #667eea; text-align: center;">📊 ESTATÍSTICAS</h3>
+        <h3 style="font-size: 48px; margin: 0 0 25px 0; color: #1a5f1a; text-align: center;">📊 ESTATÍSTICAS</h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 36px; color: #333;">
           <div><strong>Jogadores:</strong> ${confirmedPlayers.length}</div>
           <div><strong>Total de Gols:</strong> ${confirmedPlayers.reduce((sum, p) => sum + p.goals, 0)}</div>
