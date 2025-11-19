@@ -4,8 +4,8 @@
   "description": "Frontend for managing EA FC 24 hybrid tournaments",
   "main": "src/index.js",
   "scripts": {
-    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
-    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "serve": "serve -s build -l $PORT",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
