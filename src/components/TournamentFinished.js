@@ -19,6 +19,93 @@ function TournamentFinished({ tournament, players, onRefresh }) {
   const championPhaseBonus = championPlayer ? championPlayer.earnings - championFinalPrize : 0;
   const runnerUpPhaseBonus = runnerUpPlayer ? runnerUpPlayer.earnings - runnerUpFinalPrize : 0;
 
+  const generateStoryImage = () => {
+    if (!window.html2canvas) {
+      alert('Erro ao carregar a biblioteca de geração de imagem. Recarregue a página.');
+      return;
+    }
+
+    // Criar elemento temporário com o conteúdo
+    const storyContent = document.createElement('div');
+    storyContent.style.width = '1080px';
+    storyContent.style.height = '1920px';
+    storyContent.style.position = 'fixed';
+    storyContent.style.left = '-9999px';
+    storyContent.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    storyContent.style.padding = '60px 40px';
+    storyContent.style.fontFamily = 'Arial, sans-serif';
+    storyContent.style.color = 'white';
+    storyContent.style.boxSizing = 'border-box';
+
+    storyContent.innerHTML = `
+      <div style="text-align: center; margin-bottom: 50px;">
+        <h1 style="font-size: 72px; margin: 0 0 20px 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.3);">🏆 EA FC 24 🏆</h1>
+        <h2 style="font-size: 48px; margin: 0; font-weight: normal; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">TORNEIO FINALIZADO</h2>
+      </div>
+
+      <div style="background: rgba(255,215,0,0.95); padding: 40px; border-radius: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h3 style="font-size: 56px; margin: 0 0 20px 0; color: #333;">🥇 CAMPEÃO</h3>
+        <p style="font-size: 64px; margin: 10px 0; font-weight: bold; color: #000;">${tournament.champion?.name}</p>
+        <p style="font-size: 48px; margin: 10px 0; color: #333;">R$ ${championPlayer?.earnings.toFixed(2)}</p>
+        <p style="font-size: 40px; margin: 0; color: #444;">+ 1 Cerveja Louvada 🍺</p>
+      </div>
+
+      <div style="background: rgba(192,192,192,0.95); padding: 40px; border-radius: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h3 style="font-size: 56px; margin: 0 0 20px 0; color: #333;">🥈 VICE-CAMPEÃO</h3>
+        <p style="font-size: 64px; margin: 10px 0; font-weight: bold; color: #000;">${tournament.runnerUp?.name}</p>
+        <p style="font-size: 48px; margin: 10px 0; color: #333;">R$ ${runnerUpPlayer?.earnings.toFixed(2)}</p>
+        <p style="font-size: 40px; margin: 0; color: #444;">+ 1 Cerveja Louvada 🍺</p>
+      </div>
+
+      ${tournament.topScorer ? `
+      <div style="background: rgba(255,255,255,0.95); padding: 35px; border-radius: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h3 style="font-size: 48px; margin: 0 0 15px 0; color: #667eea;">⚽ ARTILHEIRO</h3>
+        <p style="font-size: 56px; margin: 10px 0; font-weight: bold; color: #333;">${tournament.topScorer.name}</p>
+        <p style="font-size: 52px; margin: 0; color: #555;">${tournament.topScorer.goals} gols</p>
+      </div>
+      ` : ''}
+
+      <div style="background: rgba(255,255,255,0.9); padding: 35px; border-radius: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h3 style="font-size: 48px; margin: 0 0 25px 0; color: #667eea; text-align: center;">📊 ESTATÍSTICAS</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 36px; color: #333;">
+          <div><strong>Jogadores:</strong> ${confirmedPlayers.length}</div>
+          <div><strong>Total de Gols:</strong> ${confirmedPlayers.reduce((sum, p) => sum + p.goals, 0)}</div>
+          <div style="grid-column: 1 / -1;"><strong>Prêmio Total:</strong> R$ ${tournament.totalPrize?.toFixed(2)}</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <p style="font-size: 52px; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🎉 PARABÉNS! 🎉</p>
+      </div>
+
+      <div style="position: absolute; bottom: 40px; left: 0; right: 0; text-align: center;">
+        <p style="font-size: 28px; margin: 0; opacity: 0.9;">${new Date().toLocaleDateString('pt-BR')}</p>
+      </div>
+    `;
+
+    document.body.appendChild(storyContent);
+
+    // Gerar imagem com html2canvas
+    window.html2canvas(storyContent, {
+      scale: 2,
+      backgroundColor: null,
+      logging: false,
+      width: 1080,
+      height: 1920
+    }).then(canvas => {
+      // Converter para blob e baixar
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `torneio-ea-fc24-${new Date().getTime()}.png`;
+        link.click();
+        URL.revokeObjectURL(url);
+        document.body.removeChild(storyContent);
+      });
+    });
+  };
+
   return (
     <div className="tournament-finished">
       <h2>🏆 Torneio Finalizado! 🏆</h2>
@@ -111,6 +198,13 @@ function TournamentFinished({ tournament, players, onRefresh }) {
             <p className="stat-value">4 unidades 🍺</p>
           </div>
         </div>
+      </section>
+
+      {/* Botão Compartilhar */}
+      <section className="share-section">
+        <button className="btn-share" onClick={generateStoryImage}>
+          📸 Gerar Story para Instagram
+        </button>
       </section>
 
       <section className="congratulations">

@@ -966,6 +966,41 @@ body {
 }
 
 .congratulations {
+  margin-top: 40px;
+  text-align: center;
+}
+
+/* Share Section */
+.share-section {
+  margin: 40px 0;
+  text-align: center;
+}
+
+.btn-share {
+  padding: 16px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-share:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+  background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+.btn-share:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.congratulations {
   text-align: center;
   padding: 40px 20px;
 }
