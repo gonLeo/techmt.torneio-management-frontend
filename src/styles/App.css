@@ -326,6 +326,65 @@ body {
   font-weight: 600;
 }
 
+/* Penalty Modal */
+.penalty-modal {
+  min-width: 500px;
+}
+
+.penalty-info {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+}
+
+.penalty-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.btn-penalty-winner {
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-penalty-winner:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-penalty-winner .player-name {
+  flex: 1;
+  text-align: left;
+}
+
+.btn-penalty-winner .trophy-icon {
+  font-size: 1.5rem;
+}
+
+.penalty-badge {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 5px 10px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
 /* Tournament Active */
 .tournament-active {
   background: white;
@@ -344,6 +403,18 @@ body {
   color: #764ba2;
   margin-bottom: 20px;
   margin-top: 30px;
+}
+
+.bye-player-info {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
 }
 
 .next-matches {
@@ -503,6 +574,157 @@ body {
   font-weight: bold;
   color: #ffc107;
   font-size: 1.1rem;
+}
+
+/* Phase Summary */
+.phase-summary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  margin: 30px 0;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.phase-summary h3 {
+  color: white;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.summary-content {
+  text-align: center;
+}
+
+.summary-content p {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.qualified-players {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.qualified-player {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  backdrop-filter: blur(10px);
+}
+
+.qualified-player.bye {
+  background: rgba(240, 147, 251, 0.3);
+}
+
+.btn-advance-phase {
+  background: white;
+  color: #667eea;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-advance-phase:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Phases History */
+.phases-history {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 3px solid #667eea;
+}
+
+.phases-history h3 {
+  color: #667eea;
+  margin-bottom: 25px;
+}
+
+.history-phase {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  border: 2px solid #ddd;
+}
+
+.history-phase h4 {
+  color: #764ba2;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.history-matches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+.history-match-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #28a745;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.history-match-card .match-players {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.history-match-card .match-score {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.95rem;
+}
+
+.history-match-card .match-aggregate {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #eee;
+  text-align: center;
+  color: #667eea;
+}
+
+.history-match-card .match-winner {
+  text-align: center;
+  margin-top: 12px;
+  padding: 10px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.history-bye {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  grid-column: 1 / -1;
 }
 
 /* Score Modal */
@@ -713,6 +935,10 @@ body {
     padding: 20px;
   }
 
+  .penalty-modal {
+    min-width: 90%;
+  }
+
   .score-inputs {
     flex-direction: column;
   }
@@ -723,5 +949,17 @@ body {
 
   .scorer-card {
     min-width: 100%;
+  }
+
+  .history-matches {
+    grid-template-columns: 1fr;
+  }
+
+  .qualified-players {
+    flex-direction: column;
+  }
+
+  .btn-advance-phase {
+    width: 100%;
   }
 }
