@@ -18,11 +18,9 @@ function TournamentFinished({ tournament, players, onRefresh }) {
   const championFinalPrize = totalParaDividir * 0.7;
   const runnerUpFinalPrize = totalParaDividir * 0.3;
   
-  // Encontrar bônus de fase do campeão e vice
+  // Encontrar jogadores
   const championPlayer = players.find(p => p.id === tournament.champion?.id);
   const runnerUpPlayer = players.find(p => p.id === tournament.runnerUp?.id);
-  const championPhaseBonus = championPlayer ? championPlayer.earnings - championFinalPrize : 0;
-  const runnerUpPhaseBonus = runnerUpPlayer ? runnerUpPlayer.earnings - runnerUpFinalPrize : 0;
 
   const generateStoryImage = () => {
     if (!window.html2canvas) {
