@@ -32,7 +32,16 @@ function PreTournament({ players, tournament, onRefresh }) {
       const data = await response.json();
       
       if (response.ok) {
-        setMessage(`✅ ${data.message}${data.byePlayer ? ` | Bye: ${data.byePlayer}` : ''}`);
+        let msg = `✅ ${data.message}`;
+        if (data.hasPreliminaryRound) {
+          msg += ` | Pré-Rodada: ${data.preliminaryMatches} confronto(s)`;
+          if (data.preliminaryByePlayers && data.preliminaryByePlayers.length > 0) {
+            msg += ` | ${data.preliminaryByePlayers.length} classificado(s) por sorteio`;
+          }
+        } else {
+          msg += ` | Sem pré-rodada (${data.totalPlayers} jogadores)`;
+        }
+        setMessage(msg);
         setShowAuthModal(false);
         setTimeout(() => onRefresh(), 1000);
       } else {
@@ -86,7 +95,7 @@ function PreTournament({ players, tournament, onRefresh }) {
                 <ul>
                   <li>Se o número de inscritos não for potência de 2 (4, 8, 16...), haverá uma Rodada 0</li>
                   <li>Alguns jogadores são sorteados para disputar confrontos de qualificação (jogo único)</li>
-                  <li>Os demais avançam direto para a Fase 1 (bye da pré-rodada)</li>
+                  <li>Os demais avançam para a Fase 1 (classificados por sorteio)</li>
                   <li>Após a pré-rodada, o torneio segue sempre com número par de jogadores</li>
                 </ul>
                 <p><strong>Exemplos:</strong></p>
@@ -169,11 +178,35 @@ function PreTournament({ players, tournament, onRefresh }) {
         </p>
         {confirmedPlayers.length >= 2 ? (
           <div className="simulation-info">
-            <p>Com {confirmedPlayers.length} jogadores confirmados, teremos:</p>
-            <p><strong>{Math.floor(confirmedPlayers.length / 2)} confrontos na primeira fase</strong></p>
-            {confirmedPlayers.length % 2 !== 0 && (
-              <p>Um jogador receberá <strong>bye</strong> e avançará automaticamente.</p>
-            )}
+            <p>Com <strong>{confirmedPlayers.length} jogadores</strong> confirmados:</p>
+            {(() => {
+              // Calcular potência de 2 abaixo
+              let power = 1;
+              while (power * 2 <= confirmedPlayers.length) {
+                power *= 2;
+              }
+              const needsPreliminary = confirmedPlayers.length !== power;
+              const preMatches = confirmedPlayers.length - power;
+              
+              if (needsPreliminary) {
+                return (
+                  <>
+                    <p>📋 <strong>Haverá Pré-Rodada (Rodada 0)</strong></p>
+                    <p>• {preMatches} confronto(s) de qualificação (jogo único)</p>
+                    <p>• {confirmedPlayers.length - (preMatches * 2)} jogador(es) classificado(s) por sorteio</p>
+                    <p>• Após a pré: {power} jogadores na Fase 1</p>
+                  </>
+                );
+              } else {
+                return (
+                  <>
+                    <p>✅ <strong>Sem Pré-Rodada</strong></p>
+                    <p>• Número perfeito! Inicia direto na Fase 1</p>
+                    <p>• {Math.floor(confirmedPlayers.length / 2)} confrontos (ida e volta)</p>
+                  </>
+                );
+              }
+            })()}
           </div>
         ) : (
           <p>Aguardando confirmações...</p>
