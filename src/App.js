@@ -35,6 +35,11 @@ function App() {
     }
   };
 
+  // Rolar para o topo quando o status do torneio mudar
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [tournamentStatus]);
+
   const refreshData = () => {
     fetchPlayers();
     fetchTournamentStatus();

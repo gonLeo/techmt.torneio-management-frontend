@@ -171,6 +171,7 @@ function TournamentActive({ players, tournament, onRefresh }) {
           setMessage('');
           refreshAll();
         }, 1500);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         setMessage(`❌ ${data.error}`);
       }

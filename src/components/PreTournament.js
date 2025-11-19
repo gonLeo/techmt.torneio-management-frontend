@@ -49,6 +49,7 @@ function PreTournament({ players, tournament, onRefresh }) {
         }
         setMessage(msg);
         setShowAuthModal(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         setTimeout(() => onRefresh(), 1000);
       } else {
         setMessage(`❌ ${data.error}`);
